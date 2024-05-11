@@ -15,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/notes"
         android:layout_marginStart="18dp"
-        android:textColor="@color/orange"
+        android:textColor="@color/mainColor"
         android:fontFamily="@font/poppins"
         android:textSize="24sp" />
 
@@ -37,11 +37,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="164dp"
         android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/mainColor"
         android:contentDescription="@string/todo"
         android:src="@drawable/baseline_add_24"
-        app:tint="@color/white"
-        android:backgroundTint="@color/orange" />
+        app:tint="@color/white" />
 
 </RelativeLayout>

@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MiniNote" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-         <item name="colorPrimary">@color/orange</item>
-         <item name="colorPrimaryVariant">@color/orange</item>
-         <item name="android:statusBarColor">@color/orange</item>
+         <item name="colorPrimary">@color/mainColor</item>
+         <item name="colorPrimaryVariant">@color/mainColor</item>
+         <item name="android:statusBarColor">@color/mainColor</item>
     </style>
 
     <style name="Theme.MiniNote" parent="Base.Theme.MiniNote" />
