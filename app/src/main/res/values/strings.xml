@@ -3,4 +3,8 @@
     <string name="add_note">Add Note</string>
     <string name="enter_the_title">Enter the title</string>
     <string name="enter_the_description">Enter the description</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="notes">Notes</string>
+    <string name="todo">TODO</string>
 </resources>
