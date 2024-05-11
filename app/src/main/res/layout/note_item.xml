@@ -39,6 +39,14 @@
                 android:contentDescription="@string/edit_desc"
                 android:src="@drawable/baseline_create_24"/>
 
+            <ImageView
+                android:id="@+id/deleteButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/edit_desc"
+                android:src="@drawable/baseline_delete_forever_24"/>
+
         </RelativeLayout>
 
         <TextView
