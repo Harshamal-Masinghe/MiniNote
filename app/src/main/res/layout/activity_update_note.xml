@@ -17,7 +17,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins"
         android:text="@string/edit_note"
-        android:textColor="@color/orange"
+        android:textColor="@color/mainColor"
         android:textSize="24sp" />
 
     <ImageView
