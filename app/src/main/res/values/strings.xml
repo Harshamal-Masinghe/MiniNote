@@ -7,4 +7,6 @@
     <string name="content">Content</string>
     <string name="notes">Notes</string>
     <string name="todo">TODO</string>
+    <string name="edit_desc">TODO</string>
+    <string name="edit_note">Edit note.</string>
 </resources>
