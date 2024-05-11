@@ -30,6 +30,15 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins" />
 
+            <ImageView
+                android:id="@+id/updateButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30dp"
+                android:contentDescription="@string/edit_desc"
+                android:src="@drawable/baseline_create_24"/>
+
         </RelativeLayout>
 
         <TextView
