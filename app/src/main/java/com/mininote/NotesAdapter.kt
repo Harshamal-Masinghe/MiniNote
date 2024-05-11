@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
 
 class NotesAdapter(private var notes: List<Note>, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
@@ -31,7 +30,7 @@ class NotesAdapter(private var notes: List<Note>, context: Context) : RecyclerVi
         holder.contentTextView.text = note.content
 
         holder.updateButton.setOnClickListener {
-            val intent = Intent(holder.itemView.context, UpdateActivity::class.java).apply {
+            val intent = Intent(holder.itemView.context, UpdateNoteActivity::class.java).apply {
                 putExtra("note_id", note.id)
             }
             holder.itemView.context.startActivity(intent)
