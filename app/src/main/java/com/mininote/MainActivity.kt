@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Observe LiveData here
-        notesLiveData.observe(this, { notes ->
+        notesLiveData.observe(this) { notes ->
             notesAdapter.refreshData(notes)
-        })
+        }
     }
 }

@@ -30,10 +30,10 @@ class UpdateNoteActivity : AppCompatActivity() {
             return
         }
 
-        db.noteDao().getNoteById(noteId).observe(this, { note ->
+        db.noteDao().getNoteById(noteId).observe(this) { note ->
             binding.updateTitleEditText.setText(note.title)
             binding.updateContentEditText.setText(note.content)
-        })
+        }
 
         binding.updateSaveButton.setOnClickListener {
             val newTitle = binding.updateTitleEditText.text.toString()

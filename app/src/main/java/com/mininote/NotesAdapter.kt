@@ -11,14 +11,14 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class NotesAdapter(notes: LiveData<List<Note>>, private val lifecycleOwner: LifecycleOwner, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+class NotesAdapter(notes: LiveData<List<Note>>, lifecycleOwner: LifecycleOwner, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
     private val db: AppDatabase = Room.databaseBuilder(
         context,
@@ -26,12 +26,11 @@ class NotesAdapter(notes: LiveData<List<Note>>, private val lifecycleOwner: Life
     ).build()
 
     private var _notes = MutableLiveData<List<Note>>()
-    val notes: LiveData<List<Note>> get() = _notes
 
     init {
-        notes.observe(lifecycleOwner, Observer { newNotes ->
+        notes.observe(lifecycleOwner) { newNotes ->
             refreshData(newNotes)
-        })
+        }
     }
 
     class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,6 +47,7 @@ class NotesAdapter(notes: LiveData<List<Note>>, private val lifecycleOwner: Life
 
     override fun getItemCount(): Int = _notes.value?.size ?: 0
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
         val note = _notes.value?.get(position)
         if (note != null) {
