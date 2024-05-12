@@ -1,15 +1,11 @@
 package com.mininote
 
-import NotesAdapter
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.mininote.databinding.ActivityMainBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,11 +33,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddNoteActivity::class.java)
             startActivity(intent)
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        val notesLiveData = db.noteDao().getAllNotes()
+        // Observe LiveData here
         notesLiveData.observe(this, { notes ->
             notesAdapter.refreshData(notes)
         })

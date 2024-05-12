@@ -1,3 +1,5 @@
+package com.mininote
+
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,23 +10,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.mininote.AppDatabase
-import com.mininote.Note
-import com.mininote.R
-import com.mininote.UpdateNoteActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class NotesAdapter(private var notes: LiveData<List<Note>>, private val lifecycleOwner: LifecycleOwner, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+class NotesAdapter(notes: LiveData<List<Note>>, private val lifecycleOwner: LifecycleOwner, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
     private val db: AppDatabase = Room.databaseBuilder(
         context,
         AppDatabase::class.java, "notesapp.db"
     ).build()
+
+    private var _notes = MutableLiveData<List<Note>>()
+    val notes: LiveData<List<Note>> get() = _notes
 
     init {
         notes.observe(lifecycleOwner, Observer { newNotes ->
@@ -44,10 +46,10 @@ class NotesAdapter(private var notes: LiveData<List<Note>>, private val lifecycl
         return NotesViewHolder(view)
     }
 
-    override fun getItemCount(): Int = notes.value?.size ?: 0
+    override fun getItemCount(): Int = _notes.value?.size ?: 0
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val note = notes.value?.get(position)
+        val note = _notes.value?.get(position)
         if (note != null) {
             holder.titleTextView.text = note.title
             holder.contentTextView.text = note.content
@@ -68,6 +70,7 @@ class NotesAdapter(private var notes: LiveData<List<Note>>, private val lifecycl
     }
 
     fun refreshData(newNotes: List<Note>) {
+        _notes.value = newNotes
         notifyDataSetChanged()
     }
 }
