@@ -1,13 +1,14 @@
 package com.mininote
 
+import NotesAdapter
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.mininote.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -26,10 +27,8 @@ class MainActivity : AppCompatActivity() {
             AppDatabase::class.java, "notesapp.db"
         ).build()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            val notes = db.noteDao().getAllNotes()
-            notesAdapter = NotesAdapter(notes, this@MainActivity)
-        }
+        val notesLiveData = db.noteDao().getAllNotes()
+        notesAdapter = NotesAdapter(notesLiveData, this, this@MainActivity)
 
         binding.notesRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.notesRecyclerView.adapter = notesAdapter
@@ -42,9 +41,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        GlobalScope.launch(Dispatchers.IO) {
-            val notes = db.noteDao().getAllNotes()
+        val notesLiveData = db.noteDao().getAllNotes()
+        notesLiveData.observe(this, { notes ->
             notesAdapter.refreshData(notes)
-        }
+        })
     }
 }
