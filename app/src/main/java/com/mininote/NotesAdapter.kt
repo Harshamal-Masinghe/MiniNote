@@ -1,5 +1,3 @@
-package com.mininote
-
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,11 +6,31 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.mininote.AppDatabase
+import com.mininote.Note
+import com.mininote.R
+import com.mininote.UpdateNoteActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class NotesAdapter(private var notes: List<Note>, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+class NotesAdapter(private var notes: LiveData<List<Note>>, private val lifecycleOwner: LifecycleOwner, context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
-    private val db: NoteDatabaseHelper = NoteDatabaseHelper(context)
+    private val db: AppDatabase = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java, "notesapp.db"
+    ).build()
+
+    init {
+        notes.observe(lifecycleOwner, Observer { newNotes ->
+            refreshData(newNotes)
+        })
+    }
 
     class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
@@ -26,28 +44,30 @@ class NotesAdapter(private var notes: List<Note>, context: Context) : RecyclerVi
         return NotesViewHolder(view)
     }
 
-    override fun getItemCount(): Int = notes.size
+    override fun getItemCount(): Int = notes.value?.size ?: 0
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val note = notes[position]
-        holder.titleTextView.text = note.title
-        holder.contentTextView.text = note.content
+        val note = notes.value?.get(position)
+        if (note != null) {
+            holder.titleTextView.text = note.title
+            holder.contentTextView.text = note.content
 
-        holder.updateButton.setOnClickListener {
-            val intent = Intent(holder.itemView.context, UpdateNoteActivity::class.java).apply {
-                putExtra("note_id", note.id)
+            holder.updateButton.setOnClickListener {
+                val intent = Intent(holder.itemView.context, UpdateNoteActivity::class.java).apply {
+                    putExtra("note_id", note.id)
+                }
+                holder.itemView.context.startActivity(intent)
             }
-            holder.itemView.context.startActivity(intent)
-        }
-        holder.deleteButton.setOnClickListener {
-            db.deleteNote(note.id)
-            refreshData(db.getAllNotes())
-            Toast.makeText(holder.itemView.context, "Note Deleted", Toast.LENGTH_SHORT).show()
+            holder.deleteButton.setOnClickListener {
+                GlobalScope.launch(Dispatchers.IO) {
+                    db.noteDao().delete(note)
+                }
+                Toast.makeText(holder.itemView.context, "Note Deleted", Toast.LENGTH_SHORT).show()
+            }
         }
     }
+
     fun refreshData(newNotes: List<Note>) {
-        notes = newNotes
         notifyDataSetChanged()
     }
-
 }
